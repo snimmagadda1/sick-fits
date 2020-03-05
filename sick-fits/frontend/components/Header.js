@@ -1,6 +1,23 @@
 import Nav from './Nav'
 import Link from 'next/link'
 import styled from 'styled-components'
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
+// This is used for the route change visualization of loading
+// No HTML/css needed!
+Router.onRouteChangeStart =  () => {
+    NProgress.start();
+    console.log("onRouteChangeStart triggered")
+}
+Router.onRouteChangeComplete = () => {
+    NProgress.done()
+    console.log("onRouteChangeComplete triggered")
+}  
+Router.onRouteChangeError =  () => {
+    NProgress.done()
+    console.log("onRouteChangeError triggered")
+}
 
 // With styled-components you put media queries inside of the selectors you want them to apply to
 // i.e can put inside of <a> tag, etc
