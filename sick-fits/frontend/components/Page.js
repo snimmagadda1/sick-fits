@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import Header from '../components/Header';
-import Meta from '../components/Header';
-import styled, { ThemeProvider, injectGlobal } from 'styled-components'; // Uses react context API (allows for less prop drilling)
-
-// a theme is just a constant that we can reference throughout the app (think sass)
+import styled, { ThemeProvider, injectGlobal } from 'styled-components';
+import Header from './Header';
+import Meta from './Meta';
 
 const theme = {
     red: '#FF0000',
@@ -12,21 +10,20 @@ const theme = {
     lightgrey: '#E1E1E1',
     offWhite: '#EDEDED',
     maxWidth: '1000px',
-    bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)', // Box shadow
+    bs: '0 12px 24px 0 rgba(0, 0, 0, 0.09)',
 };
 
+// We are able to reference theme in props b/c of the named prop passed blow
 const StyledPage = styled.div`
-    background: white; 
-    color: black;
+    background: white;
+    color: ${props => props.theme.black};
 `;
 
 const Inner = styled.div`
     max-width: ${props => props.theme.maxWidth};
-    margin : 0 auto;
+    margin: 0 auto;
     padding: 2rem;
-    background: ${props => props.theme.red};
 `;
-
 
 class Page extends Component {
     render() {
@@ -35,9 +32,7 @@ class Page extends Component {
                 <StyledPage>
                     <Meta />
                     <Header />
-                    <Inner>
-                        {this.props.children}
-                    </Inner>
+                    <Inner>{this.props.children}</Inner>
                 </StyledPage>
             </ThemeProvider>
         );
