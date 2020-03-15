@@ -1,4 +1,4 @@
-import withApollo from 'next-with-apollo';
+import withApollo from 'next-with-apollo'; // TODO what does this do? Something w/ SSSR
 import ApolloClient from 'apollo-boost';
 import { endpoint } from '../config';
 
