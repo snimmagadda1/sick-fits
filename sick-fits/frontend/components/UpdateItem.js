@@ -61,8 +61,8 @@ class UpdateItem extends Component {
 
         const res = await updateItemMutation({
             variables: {
-                id:  this.props.id,
-                ...this.state, 
+                id: this.props.id,
+                ...this.state,
             }
         });
 
@@ -76,8 +76,8 @@ class UpdateItem extends Component {
             }}>
 
                 {({ data, loading, error }) => {
-                    if(loading) return <p>Loading</p>
-                    if(!data.item) return <p>No iteme found for the ID {this.props.id}</p>
+                    if (loading) return <p>Loading</p>
+                    if (!data.item) return <p>No iteme found for the ID {this.props.id}</p>
                     return (
                         <Mutation mutation={UPDATE_ITEM_MUTATION}
                             variables={this.state}>
@@ -109,7 +109,7 @@ class UpdateItem extends Component {
                                                 defaultValue={data.item.description}
                                                 onChange={this.handleChange} />
                                         </label>
-                            <button type="submit">Sav{loading ? 'ing ' : 'e '}Changes</button>
+                                        <button type="submit">Sav{loading ? 'ing ' : 'e '}Changes</button>
                                     </fieldset>
                                 </Form>
                             )}

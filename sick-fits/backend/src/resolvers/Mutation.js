@@ -26,6 +26,17 @@ const Mutations = {
             info
         );
     },
+    async deleteItem(parent, args, ctx, info) {
+        // Find the item 
+        const where = { id: args.id }
+        const item = await ctx.db.query.item({where}, `{id, title}`);
+
+        // Check if they own the item or have permissions
+        // TODO
+
+        // Delete it 
+        return ctx.db.mutation.deleteItem({where}, info);
+    }
 };
 
 module.exports = Mutations;
