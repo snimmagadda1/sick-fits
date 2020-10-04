@@ -8,10 +8,18 @@ const Mutations = {
     async createItem(parent, args, ctx, info) {
         // We have the prisma db object in ctx
         // TODO: Check if they are logged in
+        if(!ctx.request.userId) {
+            throw new Error('You must be logged in to do that!');
+        }
 
         const item = await ctx.db.mutation.createItem(
             {
-                data: {
+                data: { // This is how to create a relationship between objects
+                    user: {
+                        connect:{
+                            id: ctx.request.userId,
+                        },
+                    },
                     ...args,
                 },
             },
