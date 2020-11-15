@@ -39,7 +39,9 @@ class DeleteItem extends Component {
                 {(deleteItem, { error }) => {
                     return <button onClick={() => {
                         if (confirm('Are you sure you want to delete this?')) {
-                            deleteItem(); // out of the box this doesn't update the interface (apollo cache)
+                            deleteItem().catch(err => {
+                                alert(err.message);
+                            }); // out of the box this doesn't update the interface (apollo cache)
                         }
                     }}>{this.props.children}</button>
                 }}
