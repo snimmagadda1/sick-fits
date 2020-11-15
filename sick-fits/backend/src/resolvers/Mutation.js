@@ -127,24 +127,6 @@ const Mutations = {
             data: { resetToken, resetTokenExpiry },
         });
         console.log(res);
-        return { message: "Thanks!" };
-        // 3. Email them that reset token
-    },
-    async requestReset(parent, args, ctx, info) {
-        // 1. Check if this is a real user
-        const user = await ctx.db.query.user({ where: { email: args.email } });
-        if (!user) {
-            throw new Error(`No such user found for email ${args.email}`);
-        }
-        // 2. Set a reset token and expiry on that user
-        const randomBytesPromiseified = promisify(randomBytes);
-        const resetToken = (await randomBytesPromiseified(20)).toString("hex");
-        const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
-        const res = await ctx.db.mutation.updateUser({
-            where: { email: args.email },
-            data: { resetToken, resetTokenExpiry },
-        });
-        console.log(res);
         // 3. Email them that reset token
         const mailRes = await transport.sendMail({
             from: "saiguy@me.com",
