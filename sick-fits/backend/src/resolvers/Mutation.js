@@ -2,21 +2,23 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
-const { transport, makeANiceEmail } = require('../mail');
+const { transport, makeANiceEmail } = require("../mail");
+const { hasPermission } = require("../utils");
 
 const Mutations = {
     async createItem(parent, args, ctx, info) {
         // We have the prisma db object in ctx
         // TODO: Check if they are logged in
-        if(!ctx.request.userId) {
-            throw new Error('You must be logged in to do that!');
+        if (!ctx.request.userId) {
+            throw new Error("You must be logged in to do that!");
         }
 
         const item = await ctx.db.mutation.createItem(
             {
-                data: { // This is how to create a relationship between objects
+                data: {
+                    // This is how to create a relationship between objects
                     user: {
-                        connect:{
+                        connect: {
                             id: ctx.request.userId,
                         },
                     },
@@ -131,8 +133,10 @@ const Mutations = {
         const mailRes = await transport.sendMail({
             from: "saiguy@me.com",
             to: user.email,
-            subject: 'Your password reset token',
-            html: makeANiceEmail(`Your Password Reset Token is here! \n\n <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}"
+            subject: "Your password reset token",
+            html: makeANiceEmail(`Your Password Reset Token is here! \n\n <a href="${
+                process.env.FRONTEND_URL
+            }/reset?resetToken=${resetToken}"
             >Click here to reset</a>`),
         });
         // 4. Return the message
@@ -177,6 +181,37 @@ const Mutations = {
         });
         // 8. return the new user
         return updatedUser;
+    },
+    async updatePermissions(parent, args, ctx, info) {
+        // 1. Check if they are logged in
+        if (!ctx.request.userId) {
+            throw new Error("You must be logged in!");
+        }
+        // 2. Query the current user
+        const currentUser = await ctx.db.query.user(
+            {
+                where: {
+                    id: ctx.request.userId,
+                },
+            },
+            info
+        );
+        // 3. Check if they have permissions to do this
+        hasPermission(currentUser, ["ADMIN", "PERMISSIONUPDATE"]);
+        // 4. Update the permissions
+        return ctx.db.mutation.updateUser(
+            {
+                data: {
+                    permissions: {
+                        set: args.permissions,
+                    },
+                },
+                where: {
+                    id: args.userId,
+                },
+            },
+            info
+        );
     },
 };
 
