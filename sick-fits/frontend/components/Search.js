@@ -1,5 +1,5 @@
 import React from "react";
-import Downshift from "downshift";
+import Downshift, {resetIdCounter} from "downshift";
 import Router from "next/router";
 import gql from "graphql-tag";
 import { ApolloConsumer } from "react-apollo";
@@ -52,6 +52,7 @@ class AutoComplete extends React.Component {
   }, 350);
 
   render() {
+    resetIdCounter();
     return (
       <SearchStyles>
         <Downshift
